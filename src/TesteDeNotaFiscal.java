@@ -1,9 +1,14 @@
+import java.util.Arrays;
+import java.util.List;
+
 public class TesteDeNotaFiscal {
 
     public static void main(String[] args) {
 
 
-        NotaFiscalBuilder builder = new NotaFiscalBuilder();
+        List<AcaoAposGerarNota> lista = Arrays.asList(new EnviadorDeEmail(), new EnviadorDeSms(),
+                new NotaFiscalDAO(), new Impressora());
+        final NotaFiscalBuilder builder = new NotaFiscalBuilder(lista);
         builder.paraEmpresa("Caelum Ensino")
         .comCnpj("12.345.678/0001-12")
         .comItem(new ItemDaNota("item 1", 100.0))

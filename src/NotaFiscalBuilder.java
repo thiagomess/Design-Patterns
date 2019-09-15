@@ -12,6 +12,15 @@ public class NotaFiscalBuilder {
     private Double valorBruto;
     private String observacoes;
     private LocalDateTime data;
+    private List<AcaoAposGerarNota> todasAcoesASeremExecutadas;
+
+    public NotaFiscalBuilder(List<AcaoAposGerarNota> todasAcoesASeremExecutadas) {
+        this.todasAcoesASeremExecutadas = new ArrayList<>();
+    }
+
+    public void adicionaAcao(AcaoAposGerarNota acao) {
+        this.todasAcoesASeremExecutadas.add(acao);
+    }
 
     public NotaFiscalBuilder paraEmpresa(String razaoSocial) {
         this.razaoSocial = razaoSocial;
@@ -22,7 +31,8 @@ public class NotaFiscalBuilder {
         this.cnpj = cnpj;
         return this;
     }
-    public NotaFiscalBuilder comItem(ItemDaNota item){
+
+    public NotaFiscalBuilder comItem(ItemDaNota item) {
         todosItents.add(item);
         valorBruto = todosItents.stream()
                 .map(ItemDaNota::getValor)
@@ -36,12 +46,15 @@ public class NotaFiscalBuilder {
         return this;
     }
 
-    public NotaFiscalBuilder naDataAtual(){
+    public NotaFiscalBuilder naDataAtual() {
         data = LocalDateTime.now();
         return this;
     }
 
-    public NotaFiscal constroi(){
-        return new NotaFiscal(razaoSocial, cnpj, data,  valorBruto,  impostos, todosItents, observacoes);
+    public NotaFiscal constroi() {
+        final NotaFiscal nf = new NotaFiscal(razaoSocial, cnpj, data, valorBruto, impostos, todosItents, observacoes);
+        todasAcoesASeremExecutadas.stream().forEach(acao -> acao.executa(nf));
+        return nf;
     }
+
 }
