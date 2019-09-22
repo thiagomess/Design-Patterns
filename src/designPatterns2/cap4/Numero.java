@@ -13,4 +13,13 @@ public class Numero implements Expressao {
     public int avalia() {
         return numero;
     }
+
+    @Override
+    public void aceita(Visitor impressora) {
+        impressora.visitaNumero(this);
+    }
+
+    public int getNumero() {
+        return numero;
+    }
 }
